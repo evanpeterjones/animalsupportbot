@@ -64,19 +64,35 @@ def _verify_data(df):
 
 def _filter_data(df, argm):
     """
-    Filters out empty text rows, along with
-    labels which doesn't match existing arguments
+    Filters out data, removing:
+        - empty text
+        - labels which don't match arguments
+        - text which is already in the training set
+    
+    Inputs:
+        df: pd.DataFrame that contains label, text columns
+        argm: ArgMatcher object 
+    
+    Returns:
+        reduced_df: pd.DataFrame with filtered out rows
     """
     known_args = set(list(argm.key_label_map.keys()))
     original_len = len(df)
 
+    # Remove if label not recognized
     reduced_df = df[df.label.isin(known_args)]
+    
+    # Remove empty text field
     reduced_df = reduced_df[reduced_df.text.notnull()]
+
+    # Remove examples in training set
+    train_texts = argm.template_dict["text"]
+    reduced_df = reduced_df[~reduced_df.text.isin(train_texts)]
 
     new_len = len(reduced_df)
 
     print(f"Reduced dataframe from {original_len} -> {new_len}")
-    assert new_len != 0, "After filtering out illegal rows, dataframe had 0 rows"
+    assert new_len != 0, "After filtering out bad rows, dataframe had 0 rows"
 
     new_num_labels_seen = len(set(reduced_df.label.values))
     num_known_args = len(known_args)
