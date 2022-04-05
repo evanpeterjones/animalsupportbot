@@ -155,7 +155,7 @@ def log_eval_results(log_folder, argm, texts, pred_labels_enc, true_labels_enc):
     raw_results_df["pred_label_enc"] = pred_labels_enc
     raw_results_df["true_label"] = list(map(arglookup, true_labels_enc))
     raw_results_df["pred_label"] = list(map(arglookup, pred_labels_enc))
-    raw_results_df.to_csv(os.path.join(log_folder, "raw_results.csv"))
+    raw_results_df.to_csv(os.path.join(log_folder, "raw_results.csv"), index=False)
 
     ## Make small results output with single value metrics
     # TODO
@@ -185,7 +185,7 @@ def make_confusion_matrices(y_true, y_pred, label_ordering, display_labels, outf
         fig, ax = plt.subplots(1, figsize=(20, 20))
         disp.plot(ax=ax, xticks_rotation="vertical", colorbar=True)
         plt.tight_layout()
-        fig.savefig(os.path.join(outfolder, f"cm_{k}.png"), transparent=False, dpi=200)
+        fig.savefig(os.path.join(outfolder, f"cm_{k}.png"), transparent=False)
 
 
 if __name__ == "__main__":
@@ -201,9 +201,9 @@ if __name__ == "__main__":
     texts, labels = process_eval_data(eval_data, argm)
 
     print(
-        f"Evaluting argmatcher with:\n\t \
-        n_neighbors: {args.n_neighbors}\n\t \
-        threshold: {args.threshold}\n\t \
+        f"Evaluting argmatcher with:\n \
+        n_neighbors: {args.n_neighbors}\n \
+        threshold: {args.threshold}\n \
         certain_threshold: {args.certain_threshold}"
     )
 
@@ -220,7 +220,7 @@ if __name__ == "__main__":
     os.makedirs("./eval_logs/", exist_ok=True)
 
     ename = os.path.splitext(os.path.basename(eval_data))[0]
-    ctime = datetime.datetime.now().strftime("%d-%m-%Y-%H-%M")
+    ctime = datetime.now().strftime("%H-%M-%d-%m-%Y")
     log_folder = os.path.join("./eval_logs/", f"{ename}_{ctime}")
     os.makedirs(log_folder, exist_ok=True)
 
