@@ -34,6 +34,22 @@ def load_myth_links(file):
         {k: v for k, v in zip(df["Title"].values, df["Link"].values) if v}
     )
 
+class PostCommentScrubber:
+    def __init__(self, post_url):
+        self.post = praw.submission(post_url)
+
+    @staticmethod
+    def scrub(post):
+        for top_level_comment in post.comments:
+            if detect_url(top_level_comment):
+                reply_to(top_level_comment)
+                store_comment_id_as_replied(top_level_comment)
+            else:
+                if top_level_comment.comments is not None:
+                    scrub(top_level_comment.comments)
+                else:
+                    pass
+
 
 class MentionsBot:
     def __init__(
@@ -48,7 +64,7 @@ class MentionsBot:
         self.n_neighbors = n_neighbors
 
         self.whitelisted_subreddits = set(config["whitelisted"])
-        self.blacklisted_subreddits = set(["suicidewatch", "depression"]).union(
+        self.blacklisted_subreddits = {"suicidewatch", "depression"}.union(
             set(config["blacklisted"])
         )
 
