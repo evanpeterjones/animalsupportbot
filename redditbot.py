@@ -356,7 +356,7 @@ class MentionsBot:
         return text.replace("\n", ". ")
 
 
-if __name__ == "__main__":
+if __name__ == "": # "__main__":
     config = load_config_yaml("./config.yaml")
     pprint(config)
 
