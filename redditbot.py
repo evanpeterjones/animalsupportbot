@@ -39,6 +39,18 @@ class PostCommentScrubber:
         self.post = praw.submission(post_url)
 
     @staticmethod
+    def detect_url(comment):
+        pass
+
+    @staticmethod
+    def reply_to(comment):
+        pass
+
+    @staticmethod
+    def store_comment_id_as_replied(comment):
+        pass
+
+    @staticmethod
     def scrub(post):
         for top_level_comment in post.comments:
             if detect_url(top_level_comment):
